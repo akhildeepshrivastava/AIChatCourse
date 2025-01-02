@@ -22,22 +22,36 @@ struct OboardingColorView: View {
             spacing: 16,
             content: {
                 ZStack {
-                    if selectedColor != nil {
-                        ctaButton
-                            .transition(.move(edge: .bottom))
+                    if let selectedColor {
+                        ctaButton(
+                            selectedColor: selectedColor
+                        )
+                        .transition(
+                            .move(
+                                edge: .bottom
+                            )
+                        )
                     }
                 }
-                .padding(24)
-                .background(Color(uiColor: .systemBackground))
+                .padding(
+                    24
+                )
+                .background(
+                    Color(
+                        uiColor: .systemBackground
+                    )
+                )
             }
         )
         .animation(.bouncy, value: selectedColor)
+        .toolbar(.hidden, for: .navigationBar)
+
     }
     
-    private var ctaButton: some View {
+    private func ctaButton(selectedColor: Color) -> some View {
         
         NavigationLink {
-            OnboardingCompletedView()
+            OnboardingCompletedView(selectedColor: selectedColor)
         } label: {
             Text("Continue")
                 .callToActionButton()
@@ -74,5 +88,8 @@ struct OboardingColorView: View {
 }
 
 #Preview {
-    OboardingColorView()
+    NavigationStack {
+        OboardingColorView()
+    }
+    .environment(AppState())
 }
