@@ -9,16 +9,56 @@ import SwiftUI
 
 struct ExploreView: View {
     
-    let avatar = AvatarModel.mock
+    @State private var featuredAvatars: [AvatarModel] = AvatarModel.mocks
+    @State private var categories: [CharacterCategory] = CharacterCategory.allCases
+    
     var body: some View {
         NavigationStack {
-            HeroCellView(
-                title: avatar.name,
-                subTitle: avatar.characterDescription,
-                imageName: avatar.profileImageName
-            )
-            .frame(height: 200)
-            .navigationTitle("Explore")
+            List {
+                featuredSection
+                categorySection
+            }
+            .navigationTitle("Categories")
+        }
+    }
+    
+    private var featuredSection: some View {
+        Section {
+            ZStack {
+                CarouselView(item: featuredAvatars) { item in
+                    HeroCellView(
+                        title: item.name,
+                        subTitle: item.characterDescription,
+                        imageName: item.profileImageName
+                    )
+                }
+            }
+            .removeListRowFormatting()
+        } header: {
+            Text("Featured Avatar")
+
+        }
+    }
+    
+    private var categorySection: some View {
+        Section {
+            ZStack {
+                ScrollView(.horizontal) {
+                    HStack(spacing: 12) {
+                        ForEach(categories, id: \.self) { category in
+                            CategoryCellView(title: category.rawValue.capitalized, imageName: Constants.randomImage)
+                        }
+                    }
+                }
+                .frame(height: 140)
+                .scrollIndicators(.hidden)
+                .scrollTargetLayout()
+                .scrollTargetBehavior(.viewAligned)
+            }
+            .removeListRowFormatting()
+        } header: {
+            Text("Categories")
+
         }
     }
 }
