@@ -75,7 +75,8 @@ struct AvatarDescription {
     }
     
     var characterDescription: String {
-        "A \(category.rawValue) that is \(action.rawValue)  in the \(location.rawValue)"
+        let prefix = category.startsWithVowel ? "An" : "A"
+        return "\(prefix) \(category.rawValue) that is \(action.rawValue)  in the \(location.rawValue)"
     }
 }
 
@@ -83,6 +84,15 @@ enum CharacterCategory: String, CaseIterable, Hashable {
     case man, woman, alien, dog, cat
     
     static var `default`: Self { .man }
+    
+    var startsWithVowel: Bool {
+        switch self {
+        case .alien:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 enum CharacterAction: String {

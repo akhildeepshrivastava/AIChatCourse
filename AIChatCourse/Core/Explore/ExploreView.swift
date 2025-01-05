@@ -11,12 +11,15 @@ struct ExploreView: View {
     
     @State private var featuredAvatars: [AvatarModel] = AvatarModel.mocks
     @State private var categories: [CharacterCategory] = CharacterCategory.allCases
+    @State private var poplularAvatars: [AvatarModel] = AvatarModel.mocks
+
     
     var body: some View {
         NavigationStack {
             List {
                 featuredSection
                 categorySection
+                popularSection
             }
             .navigationTitle("Categories")
         }
@@ -31,11 +34,14 @@ struct ExploreView: View {
                         subTitle: item.characterDescription,
                         imageName: item.profileImageName
                     )
+                    .anyButton {
+                        
+                    }
                 }
             }
             .removeListRowFormatting()
         } header: {
-            Text("Featured Avatar")
+            Text("Featured")
 
         }
     }
@@ -46,7 +52,13 @@ struct ExploreView: View {
                 ScrollView(.horizontal) {
                     HStack(spacing: 12) {
                         ForEach(categories, id: \.self) { category in
-                            CategoryCellView(title: category.rawValue.capitalized, imageName: Constants.randomImage)
+                            CategoryCellView(
+                                title: category.rawValue.capitalized,
+                                imageName: Constants.randomImage
+                            )
+                            .anyButton {
+                                
+                            }
                         }
                     }
                 }
@@ -61,6 +73,29 @@ struct ExploreView: View {
 
         }
     }
+    
+    private var popularSection: some View {
+        
+        Section {
+            ForEach(poplularAvatars, id: \.self) { avatar in
+                CustomListCellView(
+                    imageName: avatar.profileImageName,
+                    title: avatar.name,
+                    subtitle: avatar.characterDescription.capitalized
+                )
+                .anyButton(.highlight) {
+                    
+                }
+                .removeListRowFormatting()
+            }
+        } header: {
+            Text("Popular")
+
+        }
+        
+    }
+    
+    
 }
 
 #Preview {
